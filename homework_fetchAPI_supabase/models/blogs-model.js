@@ -27,14 +27,15 @@ class Blogs {
 
   static async getBlogsAsync(page, pageSize) {
     const { from, to } = convertPageAndPageSize(page, pageSize);
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from("categories")
-      .select("*", { count: "estimated" })
+      .select("*", { count: "exact" })
       .range(from, to);
     if (error) {
       throw error;
     }
-    return data;
+    console.log(data);
+    return { data, count };
   }
 
   static async getBlogById(id) {

@@ -5,17 +5,22 @@ const { checkExistAndInvalid } = require("../helpers/utils");
 
 exports.getAllBlogs = async (req, res, next) => {
   try {
-    const { page, pageSize } = req.body;
+    const page = parseInt(req.query.page);
+    const pageSize = parseInt(req.query.pageSize);
 
-    // validate body
     if (checkExistAndInvalid(page, "number")) {
       throw new ValidateError("page is invalid");
     } else if (checkExistAndInvalid(pageSize, "number")) {
       throw new ValidateError("pageSize is invalid");
     }
 
-    const blogs = await Blog.getBlogsAsync(page, pageSize);
-    const response = new ResponseFormat(blogs);
+    const { data, count } = await Blog.getBlogsAsync(page, pageSize);
+    const response = new ResponseFormat(data, 200, "", {
+      page,
+      pageSize,
+      total: count,
+      totalPages: Math.ceil(count / pageSize),
+    });
     res.json(response);
   } catch (err) {
     next(err);

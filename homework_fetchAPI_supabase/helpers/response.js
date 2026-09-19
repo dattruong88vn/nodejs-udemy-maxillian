@@ -1,8 +1,9 @@
 class ResponseFormat {
-  constructor(data, status = 200) {
+  constructor(data, statusCode = 200, message = "", meta) {
     this.data = data;
-    this.status = status;
+    this.statusCode = statusCode;
     this.error = "";
+    if (meta) this.meta = meta;
   }
 }
 
